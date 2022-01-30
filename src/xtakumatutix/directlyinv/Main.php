@@ -4,7 +4,6 @@ namespace xtakumatutix\directlyinv;
 
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
-use pocketmine\item\Item;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\utils\Config;
 
