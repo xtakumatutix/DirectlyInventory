@@ -1,0 +1,6 @@
+---
+name: DirectlyInventory
+main: xtakumatutix\directlyinv\Main
+version: 1.0.0
+api: 4.0.0
+...
