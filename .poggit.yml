@@ -1,0 +1,9 @@
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/xtakumatutix/DirectlyInventory
+build-by-default: true
+branches:
+- main
+- StackStorage
+projects:
+  DirectlyInventory:
+    path: ""
+...
