@@ -8,13 +8,15 @@ use pocketmine\item\Item;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\utils\Config;
 
+use ree_jp\stackstorage\api\StackStorageAPI;
+
 Class Main extends PluginBase implements Listener
 {
     public function onEnable() :void
     {
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->Config = new Config($this->getDataFolder() . "Config.yml", Config::YAML, array(
-            'メッセージ' => '§bインベントリがいっぱいのため下に落としました',
+            'メッセージ' => '§bインベントリがいっぱいのためスタックストレージに保存しました',
         ));
     }
 
@@ -23,15 +25,14 @@ Class Main extends PluginBase implements Listener
         $player = $event->getPlayer();
         $dropitem = $event->getDrops();
         $event->setDrops([]);
+
         foreach($dropitem as $item){
             
             if ($player->getInventory()->canAddItem($item))
             {
                 $player->getInventory()->addItem($item);
             }else{
-                $world = $player->getWorld();
-                $position = $player->getPosition();
-                $world->dropItem($position, $item);
+                StackStorageAPI::$instance->add($player->getXuid(),$item);
                 $player->sendPopup($this->Config->get('メッセージ'));
             }
         }
