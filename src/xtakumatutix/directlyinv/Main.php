@@ -12,9 +12,7 @@ Class Main extends PluginBase implements Listener
     public function onEnable() :void
     {
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
-        $this->Config = new Config($this->getDataFolder() . "Config.yml", Config::YAML, array(
-            'メッセージ' => '§bインベントリがいっぱいのため下に落としました',
-        ));
+		$this->saveDefaultConfig();
     }
 
     public function onBreak(BlockBreakEvent $event)
@@ -23,7 +21,7 @@ Class Main extends PluginBase implements Listener
         $dropitem = $event->getDrops();
         $event->setDrops([]);
         foreach($dropitem as $item){
-            
+
             if ($player->getInventory()->canAddItem($item))
             {
                 $player->getInventory()->addItem($item);
@@ -31,7 +29,7 @@ Class Main extends PluginBase implements Listener
                 $world = $player->getWorld();
                 $position = $player->getPosition();
                 $world->dropItem($position, $item);
-                $player->sendPopup($this->Config->get('メッセージ'));
+                $player->sendPopup($this->getConfig()->getNested('message.inventory-full'));
             }
         }
     }
