@@ -8,24 +8,43 @@ use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
 use pocketmine\event\block\BlockBreakEvent;
-use pocketmine\utils\Config;
 
 Class Main extends PluginBase implements Listener
 {
+	private bool $useStackStorage = false;
+
     public function onEnable() :void
     {
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
 		$this->saveDefaultConfig();
+
+		if($this->getServer()->getPluginManager()->getPlugin("StackStorage") !== null){
+			$this->useStackStorage = true;
+		}
+
     }
 
     public function onBreak(BlockBreakEvent $event)
     {
         $player = $event->getPlayer();
         $dropitem = $event->getDrops();
+		$event->setDrops([]);
+
+		if($this->useStackStorage and !$this->getConfig()->getNested("stackstorage.player-inventory-first")){
+			$this->sendItemsToStackStorage($player, $dropitem);
+			return;
+		}
+
 		$remainder = $this->tryAddItemToInventory($player->getInventory(), $dropitem);
-		$event->setDrops($remainder);
 		if(count($remainder) > 0){
-			$player->sendPopup($this->getConfig()->getNested('message.inventory-full'));
+			if($this->useStackStorage){
+				$this->sendItemsToStackStorage($player, $remainder);
+				$message = $this->getConfig()->getNested("message.inventory-full-with-stackstorage");
+			}else{
+				$event->setDrops($remainder);
+				$message = $this->getConfig()->getNested("message.inventory-full");
+			}
+			$player->sendPopup($message);
 		}
     }
 
@@ -45,5 +64,15 @@ Class Main extends PluginBase implements Listener
 			}
 		}
 		return $remainder;
+	}
+
+	/**
+	 * @param Player $player
+	 * @param Item[] $items
+	 */
+	private function sendItemsToStackStorage(Player $player, array $items){
+		foreach($items as $item){
+			StackStorageAPI::$instance->add($player->getXuid(), $item);
+		}
 	}
 }
