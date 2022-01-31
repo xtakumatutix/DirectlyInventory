@@ -8,6 +8,7 @@ use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
 use pocketmine\event\block\BlockBreakEvent;
+use ree_jp\stackstorage\api\StackStorageAPI;
 
 Class Main extends PluginBase implements Listener
 {
