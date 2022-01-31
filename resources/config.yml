@@ -1,3 +1,9 @@
+stackstorage:
+  # スタックストレージが入っているときにプレイヤーのインベントリに優先してアイテムを入れるか
+  # falseにするとプレイヤーのインベントリが空いていてもStackStorageに送る。
+  player-inventory-first: true
+
 message:
   # インベントリが満載の時に表示されるメッセージ
-  inventory-full: §bインベントリがいっぱいのため下に落としました
+  inventory-full: "§bインベントリがいっぱいのため下に落としました"
+  inventory-full-with-stackstorage: "§bインベントリがいっぱいのためスタックストレージに保存しました"
