@@ -55,8 +55,8 @@ Class Main extends PluginBase implements Listener
 	 */
 	private function tryAddItemToInventory(Inventory $inventory, array $items): array{
 		$remainder = [];
-		foreach($items as $item){
-			if ($inventory->canAddItem($item))
+        foreach($items as $item){
+            if ($inventory->canAddItem($item))
 			{
 				$inventory->addItem($item);
 			}else{
