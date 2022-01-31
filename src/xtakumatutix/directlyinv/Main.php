@@ -2,6 +2,7 @@
 
 namespace xtakumatutix\directlyinv;
 
+use pocketmine\inventory\Inventory;
 use pocketmine\item\Item;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
@@ -21,7 +22,7 @@ Class Main extends PluginBase implements Listener
     {
         $player = $event->getPlayer();
         $dropitem = $event->getDrops();
-		$remainder = $this->tryAddItemToInventory($player, $dropitem);
+		$remainder = $this->tryAddItemToInventory($player->getInventory(), $dropitem);
 		$event->setDrops($remainder);
 		if(count($remainder) > 0){
 			$player->sendPopup($this->getConfig()->getNested('message.inventory-full'));
@@ -29,16 +30,16 @@ Class Main extends PluginBase implements Listener
     }
 
 	/**
-	 * @param Player $player
+	 * @param Inventory $inventory
 	 * @param Item[] $items
 	 * @return Item[] 追加されなかった分のアイテム
 	 */
-	private function tryAddItemToInventory(Player $player, array $items): array{
+	private function tryAddItemToInventory(Inventory $inventory, array $items): array{
 		$remainder = [];
 		foreach($items as $item){
-			if ($player->getInventory()->canAddItem($item))
+			if ($inventory->canAddItem($item))
 			{
-				$player->getInventory()->addItem($item);
+				$inventory->addItem($item);
 			}else{
 				$remainder[] = $item;
 			}
